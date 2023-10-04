@@ -695,15 +695,13 @@
     }
   </script>
 
- <script>
+  <script>
+  // add custom script for swatches
+    ( function(){
 
-    window.addEventListener("DOMContentLoaded", function() {   
-      // Code to be executed when the DOM is ready   
-  
-      // add custom script for swatches
       // on color swatches click change slider thumbnail image and hide other images.
-      var sizeOptions = document.querySelector('select[name="options[Size]"]');
-      if (sizeOptions && sizeOptions.length > 0 ) {
+
+      if (document.querySelector('select[name="options[Size]"]').length > 0 ) {
         var currentVariant = '{{ product.selected_or_first_available_variant.title }}';
         currentVariant = currentVariant.split('/')[0];
         currentVariant = currentVariant.replace(' ', '');
@@ -748,27 +746,27 @@
 
       // by default select size to unselected also on refresh page it automatically select Unselected option
       var sizeOptions = document.querySelector('select[name="options[Size]"]');
-      if (sizeOptions) {
-        for (var count = 0; count < sizeOptions.length; count++) {
-          if (sizeOptions.options[count].value == 'Unselected') {
-            setTimeout(() => {
-            
-              subscribe(PUB_SUB_EVENTS.variantChange, (item) => {
-                if (item.data.variant.option2 == 'Unselected') {
-                  document.querySelector('variant-selects').toggleAddButton(true, '');
-                }
-              });
-              document.querySelector('variant-selects').toggleAddButton(true, '');
-              if (sizeOptions.value != 'Unselected') {
-                sizeOptions.value = 'Unselected';
+      for (var count = 0; sizeOptions.length; count++) {
+        if (sizeOptions.options[count].value == 'Unselected') {
+          setTimeout(() => {
+          
+            subscribe(PUB_SUB_EVENTS.variantChange, (item) => {
+              if (item.data.variant.option2 == 'Unselected') {
+                document.querySelector('variant-selects').toggleAddButton(true, '');
               }
-            }, 1000);
-          }
+            });
+            document.querySelector('variant-selects').toggleAddButton(true, '');
+            if (sizeOptions.value != 'Unselected') {
+              sizeOptions.value = 'Unselected';
+            }
+          }, 1000);
         }
       }
-    });  
+    })();
 
   </script>
+
+
 </section>
 
 {% schema %}
