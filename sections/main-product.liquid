@@ -748,7 +748,7 @@
 
       // by default select size to unselected also on refresh page it automatically select Unselected option
       var sizeOptions = document.querySelector('select[name="options[Size]"]');
-      for (var count = 0; sizeOptions.length; count++) {
+      for (var count = 0; count < sizeOptions.length; count++) {
         if (sizeOptions.options[count].value == 'Unselected') {
           setTimeout(() => {
           
