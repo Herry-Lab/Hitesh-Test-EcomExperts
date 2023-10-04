@@ -258,21 +258,20 @@ if (!customElements.get('cart-note')) {
     const masterVariantId = 47096227987730;
     const bundleProductId = 8774958317842;
     // const bundleProductVariantId = 47078806683922;
-    console.log(cartData)
-    if (cartData && "items_removed" in cartData) {
-      let removeBundleItemFlag = cartData.items_removed.some(item => item.variant_id === masterVariantId);
-      removeBundleItemFlag = removeBundleItemFlag && !cartData.items.some(item => item.variant_id === masterVariantId);
-  
-      if (removeBundleItemFlag) {
-        const bundleProduct = document.querySelector(`[data-product-id="${bundleProductId}"]`);
-        if (bundleProduct) {
-          const lineId = bundleProduct.dataset.index;
-          const cartItems =  bundleProduct.closest('cart-items') || bundleProduct.closest('cart-drawer-items');
-          // add timeout so loader can be visible
-          setTimeout( () => {
-             cartItems.updateQuantity(lineId, 0);
-          }, 100);
-        }
+
+    console.log(cartData);
+    let removeBundleItemFlag = cartData.items_removed.some(item => item.variant_id === masterVariantId);
+    removeBundleItemFlag = removeBundleItemFlag && !cartData.items.some(item => item.variant_id === masterVariantId);
+
+    if (removeBundleItemFlag) {
+      const bundleProduct = document.querySelector(`[data-product-id="${bundleProductId}"]`);
+      if (bundleProduct) {
+        const lineId = bundleProduct.dataset.index;
+        const cartItems =  bundleProduct.closest('cart-items') || bundleProduct.closest('cart-drawer-items');
+        // add timeout so loader can be visible
+        setTimeout( () => {
+           cartItems.updateQuantity(lineId, 0);
+        }, 100);
       }
     }
   });
@@ -283,4 +282,3 @@ if (!customElements.get('cart-note')) {
   });
 
 })();
-
