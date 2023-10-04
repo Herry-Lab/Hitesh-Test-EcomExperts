@@ -63,6 +63,9 @@
           {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
         {%- endif -%}
 
+        <!-- logic for hide bundle product -->
+        {% unless product.tags contains 'hide_product' %}
+
         <div class="product-form__buttons">
           {%- liquid
             assign check_against_inventory = true
@@ -105,6 +108,7 @@
             {{ form | payment_button }}
           {%- endif -%}
         </div>
+        {% endunless %}
       {%- endform -%}
     </product-form>
   {%- else -%}

@@ -26,6 +26,20 @@
         padding-bottom: {{ section.settings.padding_bottom }}px;
       }
     }
+
+    .product-form__input input[type='radio']+label.label-color {
+       width: 60px;
+       height: 60px;
+       border-radius: 0;
+       padding: 0;
+       font-size: 0;
+       border: 1px solid #888888;
+       opacity: 0.5;
+    }
+    .product-form__input input[type='radio'].active+label.label-color {
+       border-color: #019bea;
+       opacity: 1;
+    }
   {%- endstyle -%}
 
   <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
@@ -680,6 +694,84 @@
       ]
     }
   </script>
+
+  <script>
+
+    window.addEventListener("DOMContentLoaded", function() {   
+      // Code to be executed when the DOM is ready   
+  
+      // add custom script for swatches
+      // on color swatches click change slider thumbnail image and hide other images.
+      var sizeOptions = document.querySelector('select[name="options[Size]"]');
+      
+      if (sizeOptions && sizeOptions.length > 0 ) {
+        var currentVariant = '{{ product.selected_or_first_available_variant.title }}';
+        currentVariant = currentVariant.split('/')[0];
+        currentVariant = currentVariant.replace(' ', '');
+        var allThumbnail = document.querySelectorAll('li.thumbnail-list__item.slider__slide');
+
+        for (var count = 0; count < allThumbnail.length; count++) {
+            allThumbnail[count].style.display = 'none';
+        }
+        var thumbnailChild = document.querySelectorAll('li.thumbnail-list__item.slider__slide img[alt = "' + currentVariant + '"]');
+        for (var count = 0; count < thumbnailChild.length ; count++) {
+            thumbnailChild[count].parentElement.parentElement.style.display = 'block';
+        }
+
+        var getColorLabel = document.querySelectorAll('.label-color');
+        for (var count = 0; count < getColorLabel.length; count++) {
+            getColorLabel[count].addEventListener('click', function(event) {
+              var allThumbnail = document.querySelectorAll('li.thumbnail-list__item.slider__slide');
+              for (var count = 0; count < allThumbnail.length; count++) {
+                allThumbnail[count].style.display = 'none';
+              }
+              var colorVal = event.target.getAttribute('info');
+              var thumbnailChild = document.querySelectorAll('li.thumbnail-list__item.slider__slide img[alt = "' + colorVal + '"]');
+              for (var count = 0; count < thumbnailChild.length ; count++) {
+                  thumbnailChild[count].parentElement.parentElement.style.display = 'block';
+              }
+            });
+        }
+      }
+
+      // add active class on selected color swatches 
+        
+      var customColorOption = document.querySelectorAll('[name="custom-color-option"]');
+      for (var count = 0; count < customColorOption.length; count++) {
+        customColorOption[count].addEventListener('change', function(e) {
+          const val = e.target.value;
+          document.querySelector('select[name="options[Color]"]').value = val;
+          customColorOption.forEach(Element => Element.classList.remove('active'));
+          this.classList.add('active');
+        });
+      }
+
+
+      // by default select size to unselected also on refresh page it automatically select Unselected option
+      if (sizeOptions) {
+        for (var count = 0; count < sizeOptions.length; count++) {
+          if (sizeOptions.options[count].value == 'Unselected') {
+            setTimeout(() => {
+            
+              subscribe(PUB_SUB_EVENTS.variantChange, (item) => {
+                if (item.data.variant.option2 == 'Unselected') {
+                  document.querySelector('variant-selects').toggleAddButton(true, '');
+                }
+              });
+              document.querySelector('variant-selects').toggleAddButton(true, '');
+              if (sizeOptions.value != 'Unselected') {
+                sizeOptions.value = 'Unselected';
+              }
+            }, 1000);
+          }
+        }
+      }
+    });  
+
+  </script>
+</section>
+
+
 </section>
 
 {% schema %}

@@ -244,3 +244,41 @@ if (!customElements.get('cart-note')) {
     }
   );
 }
+
+
+// self executable function after document load
+
+(function() {
+
+  // Listen for cart update events
+
+  const unsubscribeListener = subscribe(PUB_SUB_EVENTS.cartUpdate, async ({cartData}) => {
+    // remove bundle product.
+
+    const masterVariantId = 47096227987730;
+    const bundleProductId = 8774958317842;
+
+    if (cartData && "items_removed" in cartData) {
+      let removeBundleItemFlag = cartData.items_removed.some(item => item.variant_id === masterVariantId);
+      removeBundleItemFlag = removeBundleItemFlag && !cartData.items.some(item => item.variant_id === masterVariantId);
+
+      if (removeBundleItemFlag) {
+        const bundleProduct = document.querySelector(`[data-product-id="${bundleProductId}"]`);
+        if (bundleProduct) {
+          const lineId = bundleProduct.dataset.index;
+          const cartItems =  bundleProduct.closest('cart-items') || bundleProduct.closest('cart-drawer-items');
+          // add timeout so loader can be visible
+          setTimeout( () => {
+            cartItems.updateQuantity(lineId, 0);
+          }, 100);
+        }
+      }
+    }
+  });
+
+  // unsubscribe on unload
+  addEventListener('beforeunload', (event) => {
+      unsubscribeListener();
+  });
+
+})();
