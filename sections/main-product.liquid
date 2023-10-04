@@ -702,8 +702,8 @@
   
       // add custom script for swatches
       // on color swatches click change slider thumbnail image and hide other images.
-
-      if (document.querySelector('select[name="options[Size]"]') && document.querySelector('select[name="options[Size]"]').length > 0 ) {
+      var sizeOptions = document.querySelector('select[name="options[Size]"]');
+      if (sizeOptions && sizeOptions.length > 0 ) {
         var currentVariant = '{{ product.selected_or_first_available_variant.title }}';
         currentVariant = currentVariant.split('/')[0];
         currentVariant = currentVariant.replace(' ', '');
