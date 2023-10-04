@@ -748,20 +748,22 @@
 
       // by default select size to unselected also on refresh page it automatically select Unselected option
       var sizeOptions = document.querySelector('select[name="options[Size]"]');
-      for (var count = 0; count < sizeOptions.length; count++) {
-        if (sizeOptions.options[count].value == 'Unselected') {
-          setTimeout(() => {
-          
-            subscribe(PUB_SUB_EVENTS.variantChange, (item) => {
-              if (item.data.variant.option2 == 'Unselected') {
-                document.querySelector('variant-selects').toggleAddButton(true, '');
+      if (sizeOptions) {
+        for (var count = 0; count < sizeOptions.length; count++) {
+          if (sizeOptions.options[count].value == 'Unselected') {
+            setTimeout(() => {
+            
+              subscribe(PUB_SUB_EVENTS.variantChange, (item) => {
+                if (item.data.variant.option2 == 'Unselected') {
+                  document.querySelector('variant-selects').toggleAddButton(true, '');
+                }
+              });
+              document.querySelector('variant-selects').toggleAddButton(true, '');
+              if (sizeOptions.value != 'Unselected') {
+                sizeOptions.value = 'Unselected';
               }
-            });
-            document.querySelector('variant-selects').toggleAddButton(true, '');
-            if (sizeOptions.value != 'Unselected') {
-              sizeOptions.value = 'Unselected';
-            }
-          }, 1000);
+            }, 1000);
+          }
         }
       }
     });  
